@@ -105,3 +105,14 @@ elo_updater <- function(bID, rID, mnum, result) {
   elo_chart[nflId==rID, elo:=final[2]]
   return(final)
 }
+
+
+#Now we apply our algorithm on the data throughout the season
+for(row in 1:nrow(every_pass_snap_ol_vs_f7)) {
+  blocker = every_pass_snap_ol_vs_f7[row, blockerId]
+  rusher = every_pass_snap_ol_vs_f7[row, rusherId]
+  blocker_won = every_pass_snap_ol_vs_f7[row, blocker_win]
+  magic_number = every_pass_snap_ol_vs_f7[row, magic_number]
+  results <- elo_updater(blocker, rusher, magic_number, blocker_won)
+  every_pass_snap_ol_vs_f7[row, postplay_blocker_elo:=results[1]][row, postplay_rusher_elo:=results[2]]
+}
